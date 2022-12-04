@@ -1,4 +1,43 @@
-String DELIMITERS = "[-+=" +
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+public class FileRead {
+	private Alist<String> stopWords = new Alist<String>(1141);
+	private String str;
+
+	public FileRead(){
+
+	}
+
+    public void ReadSports(){
+		for (int i = 1; i < 3; i++) {
+			String path ="sport/00" + i + ".txt";
+			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+				while ((str = reader.readLine()) != null) {
+					System.out.println(str);
+				}
+			} catch (IOException e) {
+			System.out.println(
+			"Error while reading a file.");
+			}
+		}
+	}
+
+	public void ReadStopWords() {
+		try (BufferedReader reader = new BufferedReader(new FileReader("stop_words_en.txt"))) {
+			 while ((str = reader.readLine()) != null) {
+				  if(str != ""){
+					stopWords.add(str);
+				  }
+			 }
+		} catch (IOException e) {
+			 System.out.println(
+					   "Error while reading a file.");
+		}
+    }
+
+	public String[] delimiters(String text){
+		String DELIMITERS = "[-+=" +
 
 		        " " +        //space
 
@@ -98,4 +137,7 @@ String DELIMITERS = "[-+=" +
 
 				
 
-String[] splitted = text.split(DELIMITERS);
+		String[] splitted = text.split(DELIMITERS);
+		return splitted;
+	}
+}
