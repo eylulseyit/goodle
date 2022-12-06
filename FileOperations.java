@@ -5,7 +5,7 @@ public class FileOperations{
 	private Alist<String> stopWords = new Alist<String>();
 	delimiter delimiter = new delimiter();
 	private String delimiters = delimiter.DELIMITERS;
-	private HashedDictionary searchingWords = new HashedDictionary<>();
+	private HashedDictionary<Integer,Word> searchingWords = new HashedDictionary<>();
 
 	public FileOperations(){
 		readStopWords();
@@ -13,15 +13,20 @@ public class FileOperations{
 	}
 
     public void readSports(){
-		String str;
+		String line;
+		int key;
 		Alist<String> extractedLine;
 		for (int i = 1; i < 101; i++) {
 			String path ="sport/" + String.format("%03d",i) + ".txt";
 			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-				while ((str = reader.readLine()) != null) {
-					extractedLine = extractStopWords(str); //get words will be searched
-					for (int j = 1; j <= extractedLine.getLength(); j++) {//for check is it works
-						//System.out.println(extractedLine.getEntry(j));
+				while ((line = reader.readLine()) != null) {
+					extractedLine = extractStopWords(line); //get words will be searched
+					for (int j = 1; j <= extractedLine.getLength(); j++) {
+						System.out.println(extractedLine.getEntry(j));//for check is it works
+						key = simpleSum(extractedLine.getEntry(j));
+						Word word = new Word(extractedLine.getEntry(j), path);
+						searchingWords.add(key, word);
+						String w = searchingWords.getValue(key).getWord();
 					}
 				}
 			} catch (IOException e) {
@@ -29,6 +34,24 @@ public class FileOperations{
 			"Error while reading a file.");
 			}
 		}
+	}
+
+	public HashedDictionary getSearchingWords() {
+		return searchingWords;
+	}
+
+	private int simpleSum(String word){
+		int sum = 0;
+		int length = word.length();
+		for (int i = 0; i < length; i++) {
+			sum += word.charAt(i);
+		}
+        sum-= 97;
+		return sum;
+	}
+
+	private void polynomialAccumulation(String word){
+
 	}
 
 	private void readStopWords() {
