@@ -1,5 +1,7 @@
-public class delimiter {
-    static final String DELIMITERS = "[-+=" +
+import java.io.File;
+
+public class delimiter{
+    final String DELIMITERS = "[-+=" +
 
 		        " " +        //space
 
@@ -96,4 +98,5 @@ public class delimiter {
 				"※" +          // reference mark
 
 		        "]";
+				
 }

@@ -1,11 +1,13 @@
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-public class ReadingFile {
+public class FileOperations{
 	private Alist<String> stopWords = new Alist<String>();
+	delimiter delimiter = new delimiter();
 	private String delimiters = delimiter.DELIMITERS;
+	private HashedDictionary searchingWords = new HashedDictionary<>();
 
-	public ReadingFile(){
+	public FileOperations(){
 		readStopWords();
 		readSports();
 	}
@@ -17,9 +19,9 @@ public class ReadingFile {
 			String path ="sport/" + String.format("%03d",i) + ".txt";
 			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
 				while ((str = reader.readLine()) != null) {
-					extractedLine = extractStopWords(str);
+					extractedLine = extractStopWords(str); //get words will be searched
 					for (int j = 1; j <= extractedLine.getLength(); j++) {//for check is it works
-						System.out.println(extractedLine.getEntry(j));
+						//System.out.println(extractedLine.getEntry(j));
 					}
 				}
 			} catch (IOException e) {
