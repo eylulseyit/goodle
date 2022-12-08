@@ -65,10 +65,24 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 	}
 
 	private int getHashIndex(K key) {
-		int hashIndex = key.hashCode() % hashTable.length;
+		int hashIndex = simpleSum((String)key) % hashTable.length;
 		if (hashIndex < 0)
 			hashIndex = hashIndex + hashTable.length;
 		return hashIndex;
+	}
+
+	private int simpleSum(String word){
+		int sum = 0;
+		int length = word.length();
+		for (int i = 0; i < length; i++) {
+			sum += word.charAt(i);
+		}
+        sum-= 97;
+		return sum;
+	}
+
+	private void polynomialAccumulation(String word){
+
 	}
 
 	public boolean isHashTableTooFull() {

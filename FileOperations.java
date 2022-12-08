@@ -1,32 +1,45 @@
 import java.io.IOException;
+import java.util.Iterator;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 public class FileOperations{
 	private Alist<String> stopWords = new Alist<String>();
 	delimiter delimiter = new delimiter();
 	private String delimiters = delimiter.DELIMITERS;
-	private HashedDictionary<Integer,Word> searchingWords = new HashedDictionary<>();
+	private HashedDictionary<String,Word> database = new HashedDictionary<>(2477);
 
 	public FileOperations(){
-		readStopWords();
-		readSports();
+		getDatabase();
+		display();
 	}
 
-    public void readSports(){
+    public void getDatabase(){
 		String line;
-		int key;
+		String key;
 		Alist<String> extractedLine;
-		for (int i = 1; i < 101; i++) {
+		readStopWords();
+		for (int i = 1; i < 5; i++) {
+
 			String path ="sport/" + String.format("%03d",i) + ".txt";
 			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+
 				while ((line = reader.readLine()) != null) {
 					extractedLine = extractStopWords(line); //get words will be searched
+
 					for (int j = 1; j <= extractedLine.getLength(); j++) {
-						System.out.println(extractedLine.getEntry(j));//for check is it works
-						key = simpleSum(extractedLine.getEntry(j));
-						Word word = new Word(extractedLine.getEntry(j), path);
-						searchingWords.add(key, word);
-						String w = searchingWords.getValue(key).getWord();
+						key = extractedLine.getEntry(j);
+
+						if(database.contains(key)){
+							Word tempWord = database.getValue(key);
+							tempWord.updateFrequency(path);
+							database.add(key, tempWord);
+						}
+
+						else{
+							Word word = new Word(extractedLine.getEntry(j), path);
+							database.add(key, word);
+						}
 					}
 				}
 			} catch (IOException e) {
@@ -36,22 +49,8 @@ public class FileOperations{
 		}
 	}
 
-	public HashedDictionary getSearchingWords() {
-		return searchingWords;
-	}
-
-	private int simpleSum(String word){
-		int sum = 0;
-		int length = word.length();
-		for (int i = 0; i < length; i++) {
-			sum += word.charAt(i);
-		}
-        sum-= 97;
-		return sum;
-	}
-
-	private void polynomialAccumulation(String word){
-
+	public HashedDictionary<String,Word> getdatabase() {
+		return database;
 	}
 
 	private void readStopWords() {
@@ -89,5 +88,22 @@ public class FileOperations{
 		return words;
 	}
 
+	public void display() {
+        Iterator<String> keyIterator = database.getKeyIterator();
+        Iterator<Word> valueIterator = database.getValueIterator();
+        while (keyIterator.hasNext()) {
+            Word value = valueIterator.next();
+
+            Alist<FrequencyByFile> fc =  value.getFrequencyList();
+            String key = keyIterator.next();
+
+            for (int i = 1; i < fc.getLength()+1; i++) {
+                String file = fc.getEntry(i).fileName;
+                String word = value.getWord();
+                int count = fc.getEntry(i).frequency;
+                System.out.println("Key: " + word + " File:" + file + ": " + count);
+            }
+        }
+    }
 	
 }

@@ -1,6 +1,6 @@
 public class SearchOperations {
     
-    private FileOperations fileOperations = new FileOperations();
+    private FileOperations fileOp = new FileOperations();
 
     public SearchOperations(){
 

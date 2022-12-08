@@ -1,11 +1,11 @@
 public class Word {
     private String word;
-    private Alist<FrequencyByFile> frequencyFileList = new Alist<FrequencyByFile>();
+    private Alist<FrequencyByFile> frequencyList = new Alist<FrequencyByFile>(100);
 
     public Word(String word, String fileName){
         this.word = word;
         FrequencyByFile frequencyByFile = new FrequencyByFile(fileName);
-        frequencyFileList.add(frequencyByFile);
+        frequencyList.add(frequencyByFile);
     }
     
     public String getWord() {
@@ -20,35 +20,64 @@ public class Word {
         return getFileName();
     }
 
-    /*public int checkFrequency(String word){
-        boolean flag;
-        int length = frequencyFileList.getLength();
-        for (int i = 0; i < length; i++) {
-            frequencyFileList.getEntry(i).getNam = word;
+    public Alist<FrequencyByFile> getFrequencyList() {
+        return frequencyList;
+    }
+
+    /*public String mostSignificentFile(){//sort files for a word
+        String file;
+        int length = frequencyList.getLength();
+        int biggestFrequency = 0;
+        int tempFrequencyF;
+        for (int i = 1; i <= length; i++) {
+            tempFrequencyF =frequencyList.getEntry(i).getFrequency();
+            if(biggestFrequency < tempFrequencyF){
+                biggestFrequency =tempFrequencyF;
+            }
+
         }
+
+        return file;
     }*/
+
+    public void updateFrequency(String fileName){
+        int position = getPosition(fileName);
+
+        if(position == 0){
+            FrequencyByFile frequencyByFile = new FrequencyByFile(fileName);
+            frequencyList.add(frequencyByFile);
+        }
+        else{
+            FrequencyByFile tempFreqByFile = frequencyList.getEntry(position);
+            tempFreqByFile.increaseFrequency();
+            frequencyList.replace(position, tempFreqByFile);
+        }
+        /*
+        position = frequencyList.getPosition(frequencyByFile);
+        FrequencyByFile tempFreqByFile = frequencyList.getEntry(position);
+        tempFreqByFile.increaseFrequency();
+        frequencyList.replace(position, tempFreqByFile);*/
+    }
+
     
-    private class FrequencyByFile { // keep frequencies seperately for every file
-        String fileName;
-        int frequency;
-        int fileIndex;
-    
-        public FrequencyByFile(String fileName){
-            this.fileName = fileName;
-            frequency = 1;
-            this.fileIndex = Integer.parseInt(fileName.replaceAll("[^0-9]", ""));//seperate numbers from fileName
-        }
 
-        public void increaseFrequency(){
-            frequency++;
+    public int getPosition(String fileName) { //for getting where a spesific entry
+        boolean found = false;
+        int index = 1;
+        int numberOfEntries = frequencyList.getLength();
+        while (!found && (index <= numberOfEntries)) {
+            if (fileName.equals(frequencyList.getEntry(index).getFileName())){
+                found = true;
+                break;
+            }
+            index++;
         }
-
-        public String getFileName() {
-            return fileName;
+        if(!found){
+            return 0;
         }
-
-        public int getFileIndex(){
-            return fileIndex;
+        else{
+            return index;
         }
     }
+    
 }
