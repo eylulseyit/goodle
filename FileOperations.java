@@ -6,12 +6,11 @@ import java.io.FileReader;
 public class FileOperations{
 	private Alist<String> stopWords = new Alist<String>();
 	delimiter delimiter = new delimiter();
-	private String delimiters = delimiter.DELIMITERS;
-	private HashedDictionary<String,Word> database = new HashedDictionary<>(2477);
+	public String delimiters = delimiter.DELIMITERS;
+	private HashedDictionary<String,Word> database = Main.database;
 
 	public FileOperations(){
 		getDatabase();
-		display();
 	}
 
     public void getDatabase(){

@@ -1,5 +1,3 @@
-import java.io.File;
-
 public class delimiter{
     final String DELIMITERS = "[-+=" +
 

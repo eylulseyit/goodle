@@ -1,12 +1,10 @@
 public class FrequencyByFile { // keep frequencies seperately for every file
     String fileName;
     int frequency;
-    int fileIndex;
 
     public FrequencyByFile(String fileName){
         this.fileName = fileName;
         frequency = 1;
-        this.fileIndex = Integer.parseInt(fileName.replaceAll("[^0-9]", ""));//seperate numbers from fileName
     }
 
     public void increaseFrequency(){
@@ -18,10 +16,15 @@ public class FrequencyByFile { // keep frequencies seperately for every file
     }
 
     public int getFileIndex(){
+        int fileIndex = Integer.parseInt(fileName.replaceAll("[^0-9]", ""));//seperate numbers from fileName
         return fileIndex;
     }
 
     public int getFrequency() {
         return frequency;
+    }
+
+    public void setFrequency(int frequency){
+        this.frequency = frequency;
     }
 }

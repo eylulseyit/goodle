@@ -71,6 +71,11 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 		return hashIndex;
 	}
 
+	private int doubleHashing(K key){
+		int hashIndex = getHashIndex(key);
+		return 31- hashIndex %31;
+	}
+
 	private int simpleSum(String word){
 		int sum = 0;
 		int length = word.length();
