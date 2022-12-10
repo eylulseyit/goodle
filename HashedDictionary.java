@@ -7,6 +7,9 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 	private int locationsUsed;
 	private static final int DEFAULT_SIZE = 101;
 	private static final double MAX_LOAD_FACTOR = 0.5;
+	public static boolean isSSF = true;
+	public static boolean isDoubleHash = true;
+	static int collision =0;
 
 	public HashedDictionary() {
 		this(DEFAULT_SIZE);
@@ -65,7 +68,12 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 	}
 
 	private int getHashIndex(K key) {
-		int hashIndex = simpleSum((String)key) % hashTable.length;
+		int hashIndex;
+		if(isSSF)
+			hashIndex = simpleSum((String)key) % hashTable.length;
+		else{
+			hashIndex = polyAcc((String)key) % hashTable.length;
+		}
 		if (hashIndex < 0)
 			hashIndex = hashIndex + hashTable.length;
 		return hashIndex;
@@ -86,8 +94,16 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 		return sum;
 	}
 
-	private void polynomialAccumulation(String word){
-
+	private int polyAcc(String word){
+		int sum = 0;
+		int length = word.length();
+		for (int i = 0; i < length; i++) {
+			for (int j = length; j > 0; j++) {
+				sum += word.charAt(i) * (31^(j - 1));
+			}
+		}
+        sum-= 97;
+		return sum;
 	}
 
 	public boolean isHashTableTooFull() {
@@ -122,8 +138,13 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 			if (hashTable[index].isIn()) {
 				if (key.equals(hashTable[index].getKey()))
 					found = true;
-				else
-					index = (index + 1) % hashTable.length;
+				else{
+					if(!isDoubleHash)
+						index = (index + 1) % hashTable.length;
+					else{
+						index = (index + doubleHashing(key)) % hashTable.length;
+					}
+				}
 			} else {
 				if (removedStateIndex == -1)
 					removedStateIndex = index;
@@ -155,8 +176,14 @@ public class HashedDictionary<K, V> implements DictionaryInterface<K, V> {
 		while (!found && (hashTable[index] != null)) {
 			if (hashTable[index].isIn() && key.equals(hashTable[index].getKey()))
 				found = true;
-			else
-				index = (index + 1) % hashTable.length;
+			else{
+					if(!isDoubleHash)
+						index = (index + 1) % hashTable.length;
+					else{
+						index = (index + doubleHashing(key)) % hashTable.length;
+					}
+					collision++;
+				}
 		}
 		int result = -1;
 		if (found)

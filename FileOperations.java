@@ -18,7 +18,7 @@ public class FileOperations{
 		String key;
 		Alist<String> extractedLine;
 		readStopWords();
-		for (int i = 1; i < 5; i++) {
+		for (int i = 1; i < 101; i++) {
 
 			String path ="sport/" + String.format("%03d",i) + ".txt";
 			try (BufferedReader reader = new BufferedReader(new FileReader(path))) {

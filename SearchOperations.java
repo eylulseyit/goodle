@@ -75,10 +75,10 @@ public class SearchOperations {
     }
 
     public String mostSignificentFile(){//sort files
-        int length = seqFrequencyList.getLength();
         int biggestFrequency = 0;
         int tempFrequencyF;
         FrequencyByFile tempf = seqFrequencyList.getEntry(1);
+        int length = seqFrequencyList.getLength();
 
         for (int i = 1; i <= length; i++) {
             tempFrequencyF =seqFrequencyList.getEntry(i).getFrequency();
